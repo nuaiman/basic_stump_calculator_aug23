@@ -1,3 +1,5 @@
+import 'dart:js_interop';
+
 import 'price_page.dart';
 import 'package:flutter/material.dart';
 
@@ -29,6 +31,54 @@ class _StumpSizeState extends State<StumpSize> {
     _heightController.dispose();
     _priceController.dispose();
     super.dispose();
+  }
+
+  double? totalPrice;
+
+  void getStumpPrice(double height, double width, double price) {
+    // Tree dimensions
+    double widthInch = width;
+    double heightInch = height;
+
+    // Price per inch for width
+    double widthPricePerInch = price;
+
+    // Calculate total price for width
+    double totalWidthPrice = widthInch * widthPricePerInch;
+
+    // Calculate price for height
+    double heightPrice = 0;
+
+    if (heightInch > 24) {
+      // Price for the first 12 inches (free)
+      heightPrice += totalWidthPrice * 0 * 12;
+
+      // Price for the next 12 inches (from 12 - 24 inches)
+      heightPrice += totalWidthPrice * 0.01 * (heightInch - 24 - 12);
+
+      // Price for anything above 24 inches
+      heightPrice += totalWidthPrice * 0.2;
+    } else if (heightInch > 12) {
+      // Price for the first 12 inches (free)
+      heightPrice += totalWidthPrice * 0 * 12;
+
+      // Price for the next (heightInch - 12) inches
+      heightPrice += totalWidthPrice * 0.01 * (heightInch - 12);
+    } else {
+      // Price for the first (heightInch) inches (free)
+      heightPrice += totalWidthPrice * 0 * heightInch;
+    }
+
+    // Calculate total cutting price
+    double totalCuttingPrice = totalWidthPrice + heightPrice;
+    setState(() {
+      totalPrice = totalCuttingPrice;
+    });
+
+    // Display the result
+    // print("Width: $widthInch inches");
+    // print("Height: $heightInch inches");
+    // print("Cutting Price: \$${totalCuttingPrice.toStringAsFixed(2)}");
   }
 
   @override
@@ -63,11 +113,34 @@ class _StumpSizeState extends State<StumpSize> {
                   ),
                 ),
                 const SizedBox(height: 0),
-                SizedBox(
-                  height: 280,
-                  width: double.infinity,
-                  child: Image.asset('assets/images/stumpSize.png'),
-                ),
+                (_heightController.text.isEmpty ||
+                        _widthController.text.isEmpty ||
+                        _priceController.text.isEmpty)
+                    ? SizedBox(
+                        height: 280,
+                        width: double.infinity,
+                        child: Image.asset('assets/images/stumpSize.png'),
+                      )
+                    : totalPrice.isNull
+                        ? SizedBox(
+                            height: 280,
+                            width: double.infinity,
+                            child: Image.asset('assets/images/stumpSize.png'),
+                          )
+                        : Center(
+                            child: SizedBox(
+                            height: 280,
+                            width: double.infinity,
+                            child: Center(
+                              child: Text(
+                                '\$ ${totalPrice.toString()}',
+                                style: const TextStyle(
+                                  fontSize: 100,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          )),
                 const SizedBox(height: 40),
                 StumpSizeBuilder(
                   controller: _widthController,
@@ -116,6 +189,9 @@ class _StumpSizeState extends State<StumpSize> {
                     });
                   },
                 ),
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                ),
               ],
             ),
           ),
@@ -130,13 +206,18 @@ class _StumpSizeState extends State<StumpSize> {
                     content: Text('Please enter a wigth and height')));
               }
             : () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => PricePage(
-                    width: double.parse(_widthController.text),
-                    height: double.parse(_heightController.text),
-                    price: double.parse(_priceController.text),
-                  ),
-                ));
+                getStumpPrice(
+                  double.parse(_heightController.text),
+                  double.parse(_widthController.text),
+                  double.parse(_priceController.text),
+                );
+                // Navigator.of(context).push(MaterialPageRoute(
+                //   builder: (context) => PricePage(
+                //     width: double.parse(_widthController.text),
+                //     height: double.parse(_heightController.text),
+                //     price: double.parse(_priceController.text),
+                //   ),
+                // ));
               },
         child: Container(
           width: double.infinity,
@@ -144,7 +225,7 @@ class _StumpSizeState extends State<StumpSize> {
           color: Colors.amber,
           child: const Center(
             child: Text(
-              'Submit',
+              'Calculate',
               style: TextStyle(
                 fontFamily: 'Bangers',
                 color: Colors.red,
