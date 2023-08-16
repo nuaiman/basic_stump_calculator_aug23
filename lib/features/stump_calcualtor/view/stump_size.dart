@@ -1,6 +1,5 @@
 import 'dart:js_interop';
 
-import 'price_page.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/widgets.dart';
@@ -113,34 +112,26 @@ class _StumpSizeState extends State<StumpSize> {
                   ),
                 ),
                 const SizedBox(height: 0),
-                (_heightController.text.isEmpty ||
-                        _widthController.text.isEmpty ||
-                        _priceController.text.isEmpty)
+                totalPrice.isNull
                     ? SizedBox(
                         height: 280,
                         width: double.infinity,
                         child: Image.asset('assets/images/stumpSize.png'),
                       )
-                    : totalPrice.isNull
-                        ? SizedBox(
-                            height: 280,
-                            width: double.infinity,
-                            child: Image.asset('assets/images/stumpSize.png'),
-                          )
-                        : Center(
-                            child: SizedBox(
-                            height: 280,
-                            width: double.infinity,
-                            child: Center(
-                              child: Text(
-                                '\$ ${totalPrice.toString()}',
-                                style: const TextStyle(
-                                  fontSize: 100,
-                                  color: Colors.white,
-                                ),
-                              ),
+                    : Center(
+                        child: SizedBox(
+                        height: 280,
+                        width: double.infinity,
+                        child: Center(
+                          child: Text(
+                            '\$ ${totalPrice.toString()}',
+                            style: const TextStyle(
+                              fontSize: 65,
+                              color: Colors.white,
                             ),
-                          )),
+                          ),
+                        ),
+                      )),
                 const SizedBox(height: 40),
                 StumpSizeBuilder(
                   controller: _widthController,
