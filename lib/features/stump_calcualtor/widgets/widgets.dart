@@ -4,14 +4,18 @@ import 'package:flutter/material.dart';
 class StumpSizeBuilder extends StatelessWidget {
   final String headerText;
   final String identifierText;
+  final String hintText;
   final Color identifierColor;
+  final IconData icon;
   final Function(String value) onChanged;
   TextEditingController controller;
   StumpSizeBuilder({
     super.key,
     required this.headerText,
     required this.identifierText,
+    required this.hintText,
     required this.identifierColor,
+    required this.icon,
     required this.controller,
     required this.onChanged,
   });
@@ -55,7 +59,8 @@ class StumpSizeBuilder extends StatelessWidget {
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10)),
                   filled: true,
-                  prefixIcon: const Icon(Icons.straighten),
+                  prefixIcon: Icon(icon),
+                  hintText: hintText,
                 ),
               ),
             ),

@@ -73,7 +73,9 @@ class _StumpSizeState extends State<StumpSize> {
                   controller: _widthController,
                   headerText: 'Width: length between the two furthest point.',
                   identifierText: 'A - B',
+                  hintText: 'inch',
                   identifierColor: Colors.red,
+                  icon: Icons.straighten,
                   onChanged: (String value) {
                     setState(() {
                       _widthController.text = value;
@@ -88,7 +90,9 @@ class _StumpSizeState extends State<StumpSize> {
                   controller: _heightController,
                   headerText: 'Height: length from top to bottom.',
                   identifierText: 'C - D',
+                  hintText: 'inch',
                   identifierColor: Colors.amber,
+                  icon: Icons.straighten,
                   onChanged: (String value) {
                     setState(() {
                       _heightController.text = value;
@@ -102,8 +106,10 @@ class _StumpSizeState extends State<StumpSize> {
                 StumpSizeBuilder(
                   controller: _priceController,
                   headerText: 'Price: per inch in width.',
-                  identifierText: 'C - D',
+                  identifierText: 'A - B',
+                  hintText: '',
                   identifierColor: Colors.green,
+                  icon: Icons.attach_money,
                   onChanged: (String value) {
                     setState(() {
                       _priceController.text = value;
