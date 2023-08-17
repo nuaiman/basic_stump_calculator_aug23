@@ -1,5 +1,3 @@
-import 'dart:js_interop';
-
 import 'package:flutter/material.dart';
 
 import '../widgets/widgets.dart';
@@ -14,13 +12,13 @@ class StumpSize extends StatefulWidget {
 class _StumpSizeState extends State<StumpSize> {
   final _widthController = TextEditingController();
   final _heightController = TextEditingController();
-  final _priceController = TextEditingController();
+
+  double _priceController = 4;
 
   @override
   void initState() {
     _widthController.clear();
     _heightController.clear();
-    _priceController.clear();
     super.initState();
   }
 
@@ -28,11 +26,10 @@ class _StumpSizeState extends State<StumpSize> {
   void dispose() {
     _widthController.dispose();
     _heightController.dispose();
-    _priceController.dispose();
     super.dispose();
   }
 
-  double? totalPrice;
+  double totalPrice = 0;
 
   void getStumpPrice(double height, double width, double price) {
     // Tree dimensions
@@ -83,149 +80,161 @@ class _StumpSizeState extends State<StumpSize> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFFa4b0a2),
-              Color(0xFF5a635c),
-            ],
-          ),
-        ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 20),
-                const Text(
-                  'What is the width between the two furthest point?',
-                  style: TextStyle(
-                    fontFamily: 'Bangers',
-                    color: Colors.white,
-                    fontSize: 32,
-                  ),
-                ),
-                const SizedBox(height: 0),
-                totalPrice.isNull
-                    ? SizedBox(
-                        height: 280,
-                        width: double.infinity,
-                        child: Image.asset('assets/images/stumpSize.png'),
-                      )
-                    : Center(
-                        child: SizedBox(
-                        height: 280,
-                        width: double.infinity,
-                        child: Center(
-                          child: Text(
-                            '\$ ${totalPrice.toString()}',
-                            style: const TextStyle(
-                              fontSize: 65,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      )),
-                const SizedBox(height: 40),
-                StumpSizeBuilder(
-                  controller: _widthController,
-                  headerText: 'Width: length between the two furthest point.',
-                  identifierText: 'A - B',
-                  hintText: 'inch',
-                  identifierColor: Colors.red,
-                  icon: Icons.straighten,
-                  onChanged: (String value) {
-                    setState(() {
-                      _widthController.text = value;
-                    });
-                  },
-                ),
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Divider(),
-                ),
-                StumpSizeBuilder(
-                  controller: _heightController,
-                  headerText: 'Height: length from top to bottom.',
-                  identifierText: 'C - D',
-                  hintText: 'inch',
-                  identifierColor: Colors.amber,
-                  icon: Icons.straighten,
-                  onChanged: (String value) {
-                    setState(() {
-                      _heightController.text = value;
-                    });
-                  },
-                ),
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Divider(),
-                ),
-                StumpSizeBuilder(
-                  controller: _priceController,
-                  headerText: 'Price: per inch in width.',
-                  identifierText: 'A - B',
-                  hintText: '',
-                  identifierColor: Colors.green,
-                  icon: Icons.attach_money,
-                  onChanged: (String value) {
-                    setState(() {
-                      _priceController.text = value;
-                    });
-                  },
-                ),
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
-                ),
+      body: SingleChildScrollView(
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xFFa4b0a2),
+                Color(0xFF5a635c),
               ],
             ),
           ),
-        ),
-      ),
-      // -----------------------------------------------------------------------
-      bottomNavigationBar: GestureDetector(
-        onTap: _widthController.text.isEmpty || _heightController.text.isEmpty
-            ? () {
-                ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    content: Text('Please enter a wigth and height')));
-              }
-            : () {
-                getStumpPrice(
-                  double.parse(_heightController.text),
-                  double.parse(_widthController.text),
-                  double.parse(_priceController.text),
-                );
-                // Navigator.of(context).push(MaterialPageRoute(
-                //   builder: (context) => PricePage(
-                //     width: double.parse(_widthController.text),
-                //     height: double.parse(_heightController.text),
-                //     price: double.parse(_priceController.text),
-                //   ),
-                // ));
-              },
-        child: Container(
-          width: double.infinity,
-          height: 60,
-          color: Colors.amber,
-          child: const Center(
-            child: Text(
-              'Calculate',
-              style: TextStyle(
-                fontFamily: 'Bangers',
-                color: Colors.red,
-                fontSize: 32,
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 5),
+                  SizedBox(
+                    height: 250,
+                    width: double.infinity,
+                    child: Image.asset('assets/images/stumpSize.png'),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Width & Height: length between the two furthest point.',
+                    style: TextStyle(
+                        fontFamily: 'Bangers',
+                        fontSize: 14,
+                        color: Colors.white),
+                  ),
+                  const SizedBox(height: 5),
+                  Row(
+                    children: [
+                      StumpSizeBuilder(
+                        controller: _widthController,
+                        identifierText: 'A - B',
+                        hintText: 'inch',
+                        identifierColor: Colors.red,
+                        icon: Icons.straighten,
+                        onChanged: (String value) {
+                          setState(() {
+                            _widthController.text = value;
+                          });
+                        },
+                      ),
+                      StumpSizeBuilder(
+                        controller: _heightController,
+                        identifierText: 'C - D',
+                        hintText: 'inch',
+                        identifierColor: Colors.amber,
+                        icon: Icons.straighten,
+                        onChanged: (String value) {
+                          setState(() {
+                            _heightController.text = value;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Price: per inch in width (A-B).',
+                    style: TextStyle(
+                        fontFamily: 'Bangers',
+                        fontSize: 14,
+                        color: Colors.white),
+                  ),
+                  const SizedBox(height: 5),
+                  TextField(
+                    onChanged: (value) {
+                      setState(() {
+                        _priceController = double.parse(value);
+                      });
+                    },
+                    keyboardType: TextInputType.number,
+                    onTapOutside: (event) {
+                      FocusManager.instance.primaryFocus!.unfocus();
+                    },
+                    cursorColor: Colors.black,
+                    style: const TextStyle(color: Colors.black),
+                    decoration: InputDecoration(
+                      labelStyle: const TextStyle(fontFamily: 'Bangers'),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      filled: true,
+                      prefixIcon: const Icon(Icons.attach_money),
+                      hintText: _priceController.toString(),
+                      hintStyle:
+                          const TextStyle(fontSize: 20, fontFamily: 'Bangers'),
+                    ),
+                  ),
+                  Expanded(
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Card(
+                          color: Colors.amber,
+                          child: Center(
+                            child: Text(
+                              '\$ $totalPrice',
+                              style: const TextStyle(
+                                fontSize: 42,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: _widthController.text.isEmpty ||
+                            _heightController.text.isEmpty
+                        ? () {
+                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text(
+                                        'Please enter a wigth and height')));
+                          }
+                        : () {
+                            getStumpPrice(
+                              double.parse(_heightController.text),
+                              double.parse(_widthController.text),
+                              _priceController,
+                            );
+                          },
+                    child: Container(
+                      width: double.infinity,
+                      height: 60,
+                      color: Colors.amber,
+                      child: const Center(
+                        child: Text(
+                          'Calculate',
+                          style: TextStyle(
+                            fontFamily: 'Bangers',
+                            color: Colors.red,
+                            fontSize: 32,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
         ),
       ),
+      // -----------------------------------------------------------------------
     );
   }
 }
