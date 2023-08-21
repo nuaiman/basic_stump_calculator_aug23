@@ -40,7 +40,7 @@ class StumpSizeBuilder extends StatelessWidget {
             hintText: hintText,
             label: Text(
               identifierText,
-              style: const TextStyle(fontSize: 24, color: Colors.white),
+              style: TextStyle(fontSize: 24, color: identifierColor),
             )),
       ),
     );

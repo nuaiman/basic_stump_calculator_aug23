@@ -29,7 +29,7 @@ class _StumpSizeState extends State<StumpSize> {
     super.dispose();
   }
 
-  double totalPrice = 0;
+  int totalPrice = 0;
 
   void getStumpPrice(double height, double width, double price) {
     // Tree dimensions
@@ -68,7 +68,7 @@ class _StumpSizeState extends State<StumpSize> {
     // Calculate total cutting price
     double totalCuttingPrice = totalWidthPrice + heightPrice;
     setState(() {
-      totalPrice = totalCuttingPrice;
+      totalPrice = totalCuttingPrice.ceil();
     });
 
     // Display the result
@@ -180,13 +180,12 @@ class _StumpSizeState extends State<StumpSize> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10),
                         child: Card(
-                          color: Colors.amber,
                           child: Center(
                             child: Text(
                               '\$ $totalPrice',
                               style: const TextStyle(
                                 fontSize: 42,
-                                color: Colors.white,
+                                color: Colors.black54,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
